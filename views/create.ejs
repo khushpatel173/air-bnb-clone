@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a new place</title>
+    <link rel="stylesheet" href="/create.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+     <div class="header">
+
+    <div class="">
+        <i class="fa-brands fa-safari logo"></i>
+    </div>
+    <div class="home text ">Home</div>
+    <div class="all-listing text ">All Listings</div>
+    <div class="add-place text ">Airbnb your Home </div>
+ </div>
+
+ <div class="main-container">
+
+    <div class="content">
+        <h2>Add Your Place</h2>
+        <form method="post" action="/listing" id="myForm">
+            <div class="title-div box">
+                <p>Title</p>
+                <input type="text" name="title" placeholder="Enter the title">
+            </div>
+             <div class="description-div box">
+                <p>Description</p>
+                <textarea name="description" placeholder="Enter the description" rows="3" cols="3"></textarea>
+            </div>
+            <div class="image-div box" >
+                <p>Image Link</p>
+                 <input type="text" name="url" placeholder="Enter the link of the image">
+            </div>
+            <div class="price-country-div">
+                <div class="price-div box">
+                    <p>Price</p>
+                    <input type="text" name="price" placeholder="Price">
+                </div>
+                <div class="country-div box">
+                    <p>Country</p>
+                    <input type="text" name="country" placeholder="Enter name of country">
+                </div>
+                 </div>
+                <div class="location-div box ">
+                    <p>Location</p>
+                    <input type="text" name="location" placeholder="Location">
+                </div>
+        </form>
+        <button id="add-btn" onclick="document.getElementById('myForm').submit()">Add New Listing</button>
+    </div>
+ </div>
+</body>
+<script>
+    let home = document.querySelector(".home");
+    let all_list = document.querySelector(".all-listing");
+    home.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+     all_list.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit a place</title>
+    <link rel="stylesheet" href="/edit.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+    <!-- <h1>Edit your listing</h1>
+    <form method="post" action="http://localhost:8080/listing/<%=place._id%>">
+ Title :    <input type="text" name="title" value="<%= place.title %>">
+     <br><br>
+     Description : <textarea name="description" placeholder="<%= place.description %>"></textarea>
+     <br><br>
+     Image Link : <input type="text" name="url" value="<%= place.image.url %>">
+     <br><br>
+     Price : <input type="number" name="price" value="<%= place.price %>">
+     Country : <input type="text" name="country" value="<%= place.country %>">
+     <br><br>
+     Location : <input type="text" name="location" value="<%= place.location %>">
+     <br><br>
+     <button>Submit</button>
+    </form> -->
+    <div class="header">
+
+    <div class="">
+        <i class="fa-brands fa-safari logo"></i>
+    </div>
+    <div class="home text ">Home</div>
+    <div class="all-listing text ">All Listings</div>
+    <div class="add-place text ">Airbnb your Home </div>
+ </div>
+
+ <div class="main-container">
+
+    <div class="content">
+        <h2>Edit your place</h2>
+        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm">
+            <div class="title-div box">
+                <p>Title</p>
+                <input type="text" name="title" value="<%= place.title %>">
+            </div>
+             <div class="description-div box">
+                <p>Description</p>
+                <textarea name="description" placeholder="<%= place.description %>" rows="3" cols="3"></textarea>
+            </div>
+            <div class="image-div box" >
+                <p>Image Link</p>
+                 <input type="text" name="url" value="<%= place.image.url %>">
+            </div>
+            <div class="price-country-div">
+                <div class="price-div box">
+                    <p>Price</p>
+                    <input type="text" name="price" value="<%= place.price %>">
+                </div>
+                <div class="country-div box">
+                    <p>Country</p>
+                    <input type="text" name="country" value="<%= place.country%>">
+                </div>
+                 </div>
+                <div class="location-div box ">
+                    <p>Location</p>
+                    <input type="text" name="location" value="<%= place.location %>">
+                </div>
+        </form>
+        <button id="add-btn" onclick="document.getElementById('myForm').submit()">Edit My Listing</button>
+    </div>
+ </div>
+</body>
+<script>
+    let home = document.querySelector(".home");
+    let all_list = document.querySelector(".all-listing");
+    home.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+     all_list.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+</script>
+</html>

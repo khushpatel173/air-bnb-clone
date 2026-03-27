@@ -1,0 +1,86 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: 10px;
+    margin-top: 15px;
+   width: 60%;
+}
+.title{
+    font-size: 40px;
+    font-weight: bolder;
+}
+.header {
+    position: sticky;
+    top: 0;
+    height: 80px;
+    display: flex;
+    gap: 15px;
+    border: 1px solid rgb(157, 157, 157);
+    align-items: center;
+    z-index: 1000;
+    background-color: white;
+}
+.text{
+    font-size: 15px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.logo{
+    font-size: 25px;
+    color: red;
+}
+img{
+    height: 450px;
+    width: 75%;
+    border-radius: 15px;
+}
+.description{
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+.price , .location , .country{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+.main-content{
+    display: flex;
+    align-items: center ;
+    flex-direction: column;
+    gap: 50px;
+}
+/* .main-content:first-child{
+    width: 85% ;
+} */
+ .buttons{
+    display: flex;
+    gap: 300px;
+    width: 60%;
+    margin-bottom: 50px;
+ }
+ button{
+    height : 40px;
+    width:80px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+ }
+ #edit-btn{
+    background-color: red;
+    color: white;
+ }
+ #delete-btn{
+    background-color: black;
+    color: white;
+ }
+ .text:hover{
+    border: 1px solid black;
+    cursor: pointer;
+    
+}
+.text{
+    padding: 5px;
+}

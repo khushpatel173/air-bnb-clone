@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details of a place</title>
+    <link rel="stylesheet" href="/details.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+    <!-- <p>Title : <%= place.title %></p>
+    <p>Description : <%= place.description %> </p>
+    <img src="<%= place.image.url %> " alt="Image" height="500px" width="500px">
+        <p>Price : <%= place.price %></p>
+    <p>Country : <%= place.country %></p>
+    <p> Location : <%= place.location %> </p>
+    <button onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'">Edit</button>
+    <button onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/delete'">Delete</button> -->
+
+    <div class="header">
+
+    <div class="">
+        <i class="fa-brands fa-safari logo"></i>
+    </div>
+    <div class="home text ">Home</div>
+    <div class="all-listing text ">All Listings</div>
+    <div class="add-place text ">Airbnb your Home </div>
+ </div>
+<div class="main-content">
+    <div class="content">
+        <div class="title"><%= place.title %></div>
+        <img src="<%= place.image.url %>" alt="">
+        <div class="description"><%= place.description %></div>
+        <div class="price"><%= place.price%>/night</div>
+        <div class="location"><%= place.location %></div>
+        <div class="country"><%= place.country %></div>
+    </div>
+    <div class="buttons">
+        <button id="edit-btn" onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'">Edit</button>
+        <form method="post" action="http://localhost:8080/listing/<%= place._id%>?_method=DELETE">
+ <button id="delete-btn">Delete</button>
+        </form>
+       
+    </div>
+    </div>
+</body>
+<script>
+     let addbtn = document.querySelector(".add-place");
+    addbtn.addEventListener("click" , ()=>{
+        window.location.href = 'http://localhost:8080/listing/add';
+    });
+    let home = document.querySelector(".home");
+    let all_list = document.querySelector(".all-listing");
+    home.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+     all_list.addEventListener("click" , ()=>{
+        window.location.href = "http://localhost:8080/listing";
+    });
+</script>
+</html>
