@@ -1,36 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+
+<% layout("/layout/navbar.ejs") -%>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All properties</title>
-    <link rel="stylesheet" href="/listing.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+     <link rel="stylesheet" href="/listing.css">
 </head>
-<body>
-    <!-- <% for(let property of properties) { %> 
-    <div>
-        <p>Title : <%= property.title %> </p>
-         <img src="<%= property.image.url %>" height="300px" width="300px" alt="Random image">
-          <p>Description : <%= property.description %> </p>
-          <p><%= property.price%> Rupee per night  </p>
-           <p><%= property.location%></p>
-           <p><%= property.country%></p> 
-    </div>
-    <button onclick="window.location.href = 'http://localhost:8080/listing/<%= property._id%>'">See in detail</button>
-<%} %>
- <button onclick="window.location.href = 'http://localhost:8080/listing/add'">Add a new place</button> -->
-
- <div class="header">
-
-    <div class="">
-        <i class="fa-brands fa-safari logo"></i>
-    </div>
-    <div class="home text ">Home</div>
-    <div class="all-listing text ">All Listings</div>
-    <div class="add-place text ">Airbnb your Home </div>
- </div>
-
+ <body>
  <h1 align = "center">All Content</h1>
  <br>
  <div class="content">
@@ -69,4 +42,3 @@
         window.location.href = "http://localhost:8080/listing";
     });
  </script>
-</html>

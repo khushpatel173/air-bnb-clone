@@ -1,34 +1,4 @@
-.header {
-    position: sticky;
-    top: 0;
-    height: 80px;
-    display: flex;
-    gap: 15px;
-    border: 1px solid rgb(157, 157, 157);
-    align-items: center;
-    z-index: 1000;
-    background-color: white;
-}
-.text{
-    font-size: 15px;
-}
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-.text:hover{
-    border: 1px solid black;
-    cursor: pointer;
-    
-}
-.text{
-    padding: 5px;
-}
-.logo{
-    font-size: 25px;
-    color: red;
-}
+
 .main-container{
     display: flex;
     justify-content: center;

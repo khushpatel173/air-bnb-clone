@@ -4,6 +4,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Place = require("./models/places.js");
 const methodOverride = require("method-override");
+const engine = require("ejs-mate");
+app.engine("ejs" , engine);
+
 app.use(methodOverride("_method"));
 main().then(()=>{
     console.log("connection successful");
