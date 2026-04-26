@@ -1,0 +1,16 @@
+<% if(createdMsg.length || deletedMsg.length){ %>
+<div class="alert alert-success alert-dismissible fade show w-50 m-auto" role="alert">
+    <%= createdMsg %>
+     <%= deletedMsg %>
+     
+     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<%}%>
+<% if(failureMsg.length || errorMsg.length){ %>
+   <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert">
+     <%=failureMsg%>
+      <%= errorMsg %>
+     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div> 
+<% } %>
+

@@ -2,65 +2,39 @@
 <head>
     <link rel="stylesheet" href="/edit.css">
 </head>
-<body>
-    <!-- <h1>Edit your listing</h1>
-    <form method="post" action="http://localhost:8080/listing/<%=place._id%>">
- Title :    <input type="text" name="title" value="<%= place.title %>">
-     <br><br>
-     Description : <textarea name="description" placeholder="<%= place.description %>"></textarea>
-     <br><br>
-     Image Link : <input type="text" name="url" value="<%= place.image.url %>">
-     <br><br>
-     Price : <input type="number" name="price" value="<%= place.price %>">
-     Country : <input type="text" name="country" value="<%= place.country %>">
-     <br><br>
-     Location : <input type="text" name="location" value="<%= place.location %>">
-     <br><br>
-     <button>Submit</button>
-    </form> -->
  <div class="main-container">
 
     <div class="content">
         <h2>Edit your place</h2>
-        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm">
+        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm" novalidate class="needs-validation">
             <div class="title-div box">
                 <p>Title</p>
-                <input type="text" name="title" value="<%= place.title %>">
+                <input type="text" name="title" value="<%= place.title %>" class="form-control" required>
             </div>
              <div class="description-div box">
                 <p>Description</p>
-                <textarea name="description" placeholder="<%= place.description %>" rows="3" cols="3"></textarea>
+                <textarea name="description" placeholder="<%= place.description %>" rows="3" cols="3" class="form-control" required></textarea>
             </div>
             <div class="image-div box" >
                 <p>Image Link</p>
-                 <input type="text" name="url" value="<%= place.image.url %>">
+                 <input type="text" name="url" value="<%= place.image.url %>" class="form-control" required>
             </div>
             <div class="price-country-div">
                 <div class="price-div box">
                     <p>Price</p>
-                    <input type="text" name="price" value="<%= place.price %>">
+                    <input type="text" name="price" value="<%= place.price %>" class="form-control" required>
                 </div>
                 <div class="country-div box">
                     <p>Country</p>
-                    <input type="text" name="country" value="<%= place.country%>">
+                    <input type="text" name="country" value="<%= place.country%>" class="form-control" required>
                 </div>
                  </div>
                 <div class="location-div box ">
                     <p>Location</p>
-                    <input type="text" name="location" value="<%= place.location %>">
+                    <input type="text" name="location" value="<%= place.location %>" class="form-control" required>
                 </div>
         </form>
-        <button id="add-btn" onclick="document.getElementById('myForm').submit()">Edit My Listing</button>
+        <button id="add-btn" onclick="document.getElementById('myForm').requestSubmit()">Edit My Listing</button>
     </div>
  </div>
-</body>
-<script>
-    let home = document.querySelector(".home");
-    let all_list = document.querySelector(".all-listing");
-    home.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
-    });
-     all_list.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
-    });
-</script>
+<script src="/js/script.js"></script>

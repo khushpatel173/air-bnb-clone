@@ -2,15 +2,6 @@
 <head>
     <link rel="stylesheet" href="/details.css">
 </head>
-<body>
-    <!-- <p>Title : <%= place.title %></p>
-    <p>Description : <%= place.description %> </p>
-    <img src="<%= place.image.url %> " alt="Image" height="500px" width="500px">
-        <p>Price : <%= place.price %></p>
-    <p>Country : <%= place.country %></p>
-    <p> Location : <%= place.location %> </p>
-    <button onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'">Edit</button>
-    <button onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/delete'">Delete</button> -->
 <div class="main-content">
     <div class="content">
         <div class="title"><%= place.title %></div>
@@ -20,26 +11,34 @@
         <div class="location"><%= place.location %></div>
         <div class="country"><%= place.country %></div>
     </div>
+
+
     <div class="buttons">
-        <button id="edit-btn" onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'">Edit</button>
+        <button id="edit-btn" onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'" class="hidden">Edit</button>
         <form method="post" action="http://localhost:8080/listing/<%= place._id%>?_method=DELETE">
- <button id="delete-btn">Delete</button>
+ <button id="delete-btn" class="hidden">Delete</button>
         </form>
-       
+    </div>
+
+    <div class="reviews">
+        <h3>Leave your review</h3>
+        <form method="post" id="review-form" action="/listing/<%= place._id%>/review" novalidate class="needs-validation">
+            Rating <input type="range" min="1" max="5" name="rating" id="range">
+            <textarea name="comment" id="comment" placeholder="Enter your review" class="form-control" required></textarea>
+            <button class="form-control">Submit</button>
+        </form>
+    </div>
+    <div class="show-reviews">
+        <!-- print all the reviews which belongs to this place -->
+        <% for(review of place.review) { %>
+            <div class="review-box">
+                <p>Created By: <%= review.owner.username %></p>
+                <p>Rating : <%= review.rating %></p>
+                <p>Comment : <%= review.comment %></p>
+                <form method="post" action="/listing/<%= place._id%>/review/<%= review._id%>?_method=DELETE">
+                    <button>Delete</button>
+                </form>
+            </div>
+         <% } %>
     </div>
     </div>
-</body>
-<script>
-     let addbtn = document.querySelector(".add-place");
-    addbtn.addEventListener("click" , ()=>{
-        window.location.href = 'http://localhost:8080/listing/add';
-    });
-    let home = document.querySelector(".home");
-    let all_list = document.querySelector(".all-listing");
-    home.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
-    });
-     all_list.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
-    });
-</script>

@@ -1,0 +1,19 @@
+<% layout("/layout/navbar.ejs") -%>
+<head>
+    <link rel="stylesheet" href="/signup.css">
+</head>
+
+<h2 align="center">Login</h2>
+<form method="post" action="/login" class="mt-4 w-50 needs-validation" novalidate>
+    <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" required name="username">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input name ="password" type="password" class="form-control" id="exampleInputPassword1" required>
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<script src="/js/script.js"></script>

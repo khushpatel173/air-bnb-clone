@@ -9,6 +9,15 @@
     z-index: 1000;
     background-color: white;
 }
+#login-div , #logout-div{
+    margin-left: auto;
+}
+#logout-div{
+    margin-right: 15px;
+}
+#signup-div{
+    margin-right: 15px;
+}
 .text{
     font-size: 15px;
 }
