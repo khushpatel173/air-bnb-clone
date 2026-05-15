@@ -1,6 +1,8 @@
 const Place = require("./models/places");
 const listingSchema = require("./schema");
 const reviewSchema = require("./reviewSchema");
+const ExpressError = require("./utils/ExpressError");
+
 module.exports.isAuthenticated = (req ,res , next)=>{
     console.log(req.originalUrl);
     // req.session.redirectUrl = req.originalUrl;
@@ -10,7 +12,8 @@ if(!(req.isAuthenticated())){
     } else {
       req.session.redirectUrl = req.get("referer") || "/listing";
     }
-        req.flash("error" , "You need to loggen in order to add a place")
+        req.flash("error" , "You need to loggen in order to add a place");
+
         return res.redirect("/login");
     }
     // authenticated then call next
@@ -20,6 +23,7 @@ if(!(req.isAuthenticated())){
 module.exports.saveRedirectUrl = (req , res , next)=>{
     if(req.session.redirectUrl){
         res.locals.redirectUrl = req.session.redirectUrl;
+         
     }
     next();
 };
@@ -36,16 +40,15 @@ module.exports.isOwner = async (req , res ,next)=>{
 }
 
 module.exports.validatefn = (req , res , next)=>{
+    console.log("validatefn: req.body =", req.body);
     let {error} = listingSchema.validate(req.body , { abortEarly: false });
     if(error)
     {
         console.log(error);
         let errMsg = error.details.map((el)=> el.message).join(" ,");
-       throw new ExpressError(400 , errMsg);
+       return next(new ExpressError(400 , errMsg));
     }
-    else{
         next();
-    }
 }
 
 module.exports.validatereview = ((req , res , next)=>{

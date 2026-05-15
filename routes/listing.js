@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -7,11 +9,58 @@ const ExpressError = require("../utils/ExpressError.js");
 const Joi = require('joi');
 const listingSchema = require("../schema.js");
 const { isAuthenticated, isOwner , validatefn } = require("../authenticate_mdlware.js");
-router.get("/" , wrapAsync(async (req , res)=>{
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+
+router
+.route("/")
+.get(wrapAsync(async (req , res)=>{
     // show all the properties
     let properties = await Place.find({});
     res.render("listing.ejs" , {properties});
+}))
+.post(isAuthenticated , upload.single('url'),validatefn, wrapAsync(async (req,res , next)=>{
+    // if we come here that means a new listing have been created
+    // console.log(req.user);
+     cloudinary.config({ 
+        cloud_name: process.env.CLOUD_NAME, 
+        api_key: process.env.API_KEY, 
+        api_secret: process.env.API_SECRET // Click 'View API Keys' above to copy your API secret
+    });
+
+     const uploadResult = await cloudinary.uploader
+       .upload(
+           req.file.path
+       )
+       .catch((error) => {
+           console.log(error);
+       });
+       let filename = uploadResult.original_filename;
+         let url = uploadResult.secure_url;
+//    remove the file from the system
+       fs.unlinkSync(req.file.path);
+
+   req.flash("success" , "New Listing created");
+                let {title,description,price,country,location} =req.body;
+                await Place.insertOne(
+                    {
+                        title : title,
+                        description : description,
+                    image : {
+                        url : url,
+                        filename : filename
+                    },
+                        price : price ,
+                        location : location ,
+                        country : country,
+                        owner : req.user._id,
+                    }
+                );
+                res.redirect("/listing");
 }));
+
 router.get("/add" ,isAuthenticated, (req,res)=>{
     // render a form which will take the data
 
@@ -26,27 +75,10 @@ router.get("/add" ,isAuthenticated, (req,res)=>{
     res.render("create.ejs");
 })
 
-router.post("/" ,validatefn , wrapAsync(async (req,res , next)=>{
-    // if we come here that means a new listing have been created
-    // console.log(req.user);
-    req.flash("success" , "New Listing created");
-    let {title,description,url,price,country,location} =req.body;
-    await Place.insertOne(
-        {
-            title : title,
-            description : description,
-           image : {
-            url : url
-           },
-            price : price ,
-            location : location ,
-            country : country,
-            owner : req.user._id,
-        }
-    );
-    res.redirect("/listing");
-}));
-router.get("/:id" , wrapAsync(async (req , res)=>{
+
+router
+.route("/:id")
+.get(wrapAsync(async (req , res)=>{
     // show the details and with that also have the button of edit and delete
     let {id} = req.params;
     let place = await Place.findById(id).populate("review").populate("owner").populate({
@@ -60,21 +92,8 @@ router.get("/:id" , wrapAsync(async (req , res)=>{
          return res.redirect("/listing");
     }
     res.render("details.ejs" , {place});
-}));
-router.get("/:id/edit" , isAuthenticated , isOwner , wrapAsync(async (req ,res)=>{
-   
-    // render a from which will allow user to edit also add an button to go to back to listing
-
-    let {id} = req.params;
-    let place = await Place.findById(id);
-    if(!place)
-    {
-        req.flash("failure" , "The place you are trying to edit does not exist");
-         return res.redirect("/listing");
-    }
-    res.render("edit.ejs" , {place});
-}));
-router.post("/:id" , validatefn , isOwner , wrapAsync(async (req , res)=>{
+}))
+.post(validatefn , isOwner , wrapAsync(async (req , res)=>{
     // change the data in the database 
     let {id} = req.params;
     let {title , description  , url , price , country , location} =req.body;
@@ -95,11 +114,25 @@ router.post("/:id" , validatefn , isOwner , wrapAsync(async (req , res)=>{
         location
     });
     res.redirect(`/listing/${id}`);
-}));
-router.delete("/:id" ,isAuthenticated ,isOwner ,   wrapAsync(async (req ,res)=>{
+}))
+.delete(isAuthenticated ,isOwner ,   wrapAsync(async (req ,res)=>{
     req.flash("deleted" , "Place has been deleted");
     let {id} = req.params;
     await Place.findByIdAndDelete(id);
     res.redirect("/listing");
 }));
+router.get("/:id/edit" , isAuthenticated , isOwner , wrapAsync(async (req ,res)=>{
+   
+    // render a from which will allow user to edit also add an button to go to back to listing
+
+    let {id} = req.params;
+    let place = await Place.findById(id);
+    if(!place)
+    {
+        req.flash("failure" , "The place you are trying to edit does not exist");
+         return res.redirect("/listing");
+    }
+    res.render("edit.ejs" , {place});
+}));
+
 module.exports = router;

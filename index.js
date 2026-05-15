@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+
 const mongoose = require("mongoose");
 const Place = require("./models/places.js");
 const methodOverride = require("method-override");
@@ -51,8 +52,8 @@ const sessionOptions = {
             expires : Date.now() + 7 * 24 * 60 * 60 * 1000, // in ms
             //   expires : Date.now(), // in ms
             maxAge : 7 * 24 * 60 * 60 * 100,
-            // maxAge : 0,
-            httpOnly : true, // for security purposes
+          
+            httpOnly : true, // the cookie become unaccesseble to the java script
         }
 };
 
@@ -64,13 +65,14 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new localStrategy(User.authenticate()));
+passport.use(new localStrategy(User.authenticate())); // mentioning what are we using like the local one or like oauth
+
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-
+// res.locals is like storing a data for that particular request
 app.use((req , res , next)=>{
     res.locals.createdMsg = req.flash("success");
     res.locals.deletedMsg = req.flash("deleted");
@@ -110,7 +112,7 @@ app.get("/logout" , (req , res ,next )=>{
 app.post("/login",saveRedirectUrl , passport.authenticate("local" , {failureRedirect : "/login" , failureFlash : true}) ,(req ,res)=>{
     // if you are here that means you are logged in
     let redirectUrl = res.locals.redirectUrl || "/listing";
-
+    delete req.session.redirectUrl;
     req.flash("success" , "Welcome to airbnb , you are logged in");
     res.redirect(redirectUrl);
 })
@@ -132,8 +134,8 @@ app.post("/signup" , wrapAsync(async(req ,res)=>{
     //     res.redirect("/signup");
     //     return;
     // }
-        req.login(registeredUser , (err)=>{
-            if(err){
+       req.login(registeredUser , (err)=>{
+             if(err){
                 next(err);
             }
      req.flash("success" , "Welcome to airbnb , you are signedup");

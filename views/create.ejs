@@ -5,7 +5,7 @@
  <div class="main-container">
     <div class="content">
         <h2>Add Your Place</h2>
-        <form method="post" action="/listing" id="myForm" class="needs-validation" novalidate>
+        <form method="post" action="/listing" id="myForm" class="needs-validation" novalidate enctype="multipart/form-data"> 
             <div class="title-div box">
                 <p>Title</p>
                 <input type="text" name="title" placeholder="Enter the title" required class="form-control">
@@ -21,8 +21,8 @@
       </div>
             </div>
             <div class="image-div box" >
-                <p>Image Link</p>
-                 <input type="text" name="url" placeholder="Enter the link of the image" required class="form-control">
+                <p>Upload Image</p>
+                 <input type="file" name="url" placeholder="Enter the link of the image" required class="form-control">
                      <div class="invalid-feedback">
         Please enter a valid image link.
       </div>

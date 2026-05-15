@@ -14,6 +14,7 @@ const userSchema = new Schema(
 
     }
 )
-userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(passportLocalMongoose); // it will create username and pass on its own and some methods. it will add to the schema\
+
  const User = mongoose.model("User" , userSchema);
  module.exports = User;

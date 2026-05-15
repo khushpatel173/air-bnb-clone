@@ -5,7 +5,6 @@ const listingSchema = Joi.object({
     // image : Joi.object({
     //     url : Joi.string()
     // }),
-    url : Joi.string(),
     location : Joi.string().required(),
     country : Joi.string().required(),
     price : Joi.number().required().min(0)
