@@ -2,7 +2,22 @@
 <head>
     <link rel="stylesheet" href="/details.css">
      <link rel="stylesheet" href="/star.css">
+     <link 
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+    <style>
+        #map {
+            height: 500px;
+            width: 80vh;
+        }
+    </style>
+  
 </head>
+  <script>
+        const cordinates =  <%- JSON.stringify(place.geometry.coordinates) %>;
+        const locationFinal = "<%= place.location%>";
+    </script>
 <div class="main-content">
     <div class="content">
         <div class="title"><%= place.title %></div>
@@ -56,4 +71,15 @@
             </div>
          <% } %>
     </div>
+
+ <div id="map">
+
+   
     </div>
+    </div>
+
+     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+     <script src="/js/map.js"> </script>
+
+  
+     

@@ -358,6 +358,6 @@ let sampleListings = [
     country: "Costa Rica",
   },
 ];
-const ownerId = new mongoose.Types.ObjectId('69e31b01c60eb64697f2209f');
+const ownerId = new mongoose.Types.ObjectId('69e3c55eaa919d0201dd17bd');
 sampleListings = sampleListings.map((obj) =>({...obj, owner : ownerId}));
 Place.insertMany(sampleListings);

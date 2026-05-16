@@ -13,7 +13,7 @@ const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
-
+const uploadfn = require("../cloudUpload.js");
 router
 .route("/")
 .get(wrapAsync(async (req , res)=>{
@@ -22,43 +22,53 @@ router
     res.render("listing.ejs" , {properties});
 }))
 .post(isAuthenticated , upload.single('url'),validatefn, wrapAsync(async (req,res , next)=>{
-    // if we come here that means a new listing have been created
-    // console.log(req.user);
-     cloudinary.config({ 
-        cloud_name: process.env.CLOUD_NAME, 
-        api_key: process.env.API_KEY, 
-        api_secret: process.env.API_SECRET // Click 'View API Keys' above to copy your API secret
-    });
+   if (!req.file) {
+        return next(new ExpressError(400, "Image file is required"));
+      }
+let url , filename;
+         let result = await uploadfn(req ,res , next);
+         url = result.secure_url;
+          filename = result.original_filename;
 
-     const uploadResult = await cloudinary.uploader
-       .upload(
-           req.file.path
-       )
-       .catch((error) => {
-           console.log(error);
-       });
-       let filename = uploadResult.original_filename;
-         let url = uploadResult.secure_url;
+    //   get the cordinates and store them in the database
+
+   const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${req.body.location}&format=geojson&limit=1`,
+    {
+      headers: {
+        'User-Agent': 'airbnb-sample-app/1.0 (khush9427528660@gmail.com)', // REQUIRED by Nominatim policy
+        'Referer': 'http://localhost:8080' // or your production domain
+      },
+      timeout: 5000
+    }
+  );
+      
+        const data = await response.json();
+        // data.geometry is the geojson format so just store it
 //    remove the file from the system
-       fs.unlinkSync(req.file.path);
+                // let {title,description,price,country,location} =req.body;
+                // await Place.insertOne(  
+                //     {
+                //         title : title,
+                //         description : description,
+                //     image : {
+                //         url : url,
+                //         filename : filename
+                //     },
+                //         price : price ,
+                //         location : location ,
+                //         country : country,
+                //         owner : req.user._id,
+                //     }
+                // );
+    let listing = new Place(req.body);
+    listing.owner = req.user._id;
+    listing.image = {url , filename};
+    listing.geometry = data.features[0].geometry;
+    await listing.save();
+    req.flash("success" , "New Listing created");
 
-   req.flash("success" , "New Listing created");
-                let {title,description,price,country,location} =req.body;
-                await Place.insertOne(
-                    {
-                        title : title,
-                        description : description,
-                    image : {
-                        url : url,
-                        filename : filename
-                    },
-                        price : price ,
-                        location : location ,
-                        country : country,
-                        owner : req.user._id,
-                    }
-                );
-                res.redirect("/listing");
+    res.redirect("/listing");
 }));
 
 router.get("/add" ,isAuthenticated, (req,res)=>{
@@ -85,7 +95,6 @@ router
         path : "review",
         populate : {path : "owner"},
     });
-    console.log(place.review);
     if(!place)
     {
         req.flash("failure" , "The place you are trying to acees does not exist");
@@ -93,10 +102,15 @@ router
     }
     res.render("details.ejs" , {place});
 }))
-.post(validatefn , isOwner , wrapAsync(async (req , res)=>{
+.post( isAuthenticated ,upload.single("url"), isOwner , validatefn , wrapAsync(async (req , res,next)=>{
     // change the data in the database 
+    let url , filename;
+  if(req.file){
+         let result = await uploadfn(req ,res , next);
+         url = result.secure_url;
+          filename = result.original_filename;
+  }
     let {id} = req.params;
-    let {title , description  , url , price , country , location} =req.body;
     let place = await Place.findById(id);
     if(!(res.locals.currUser && place.owner.equals(res.locals.currUser._id))){
         //  then you cant edit
@@ -104,15 +118,14 @@ router
         return res.redirect(`/listing/${id}`);
     }
     await Place.findByIdAndUpdate(id , {
-        title,
-        description,
-        image : {
-            url : url
-        } ,
-        price , 
-        country ,
-        location
+        ...req.body
     });
+    if(req.file){
+    place.image = {
+        url ,filename
+    };
+    await place.save();
+}
     res.redirect(`/listing/${id}`);
 }))
 .delete(isAuthenticated ,isOwner ,   wrapAsync(async (req ,res)=>{
@@ -132,7 +145,9 @@ router.get("/:id/edit" , isAuthenticated , isOwner , wrapAsync(async (req ,res)=
         req.flash("failure" , "The place you are trying to edit does not exist");
          return res.redirect("/listing");
     }
-    res.render("edit.ejs" , {place});
+    let currentUrl = place.image.url;
+    currentUrl.replace("/upload" , "/upload/w_250");
+    res.render("edit.ejs" , {place , currentUrl});
 }));
 
 module.exports = router;

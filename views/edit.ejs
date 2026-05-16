@@ -6,7 +6,7 @@
 
     <div class="content">
         <h2>Edit your place</h2>
-        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm" novalidate class="needs-validation">
+        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm" novalidate class="needs-validation" enctype="multipart/form-data">
             <div class="title-div box">
                 <p>Title</p>
                 <input type="text" name="title" value="<%= place.title %>" class="form-control" required>
@@ -15,9 +15,15 @@
                 <p>Description</p>
                 <textarea name="description" placeholder="<%= place.description %>" rows="3" cols="3" class="form-control" required></textarea>
             </div>
+            <div>
+                Current Image <br>
+                <img src="<%= currentUrl %>" alt="Original Image" height="250" >
+                <!-- we will put less qualityu image overhere not the full quality version just needed for the preview -->
+
+            </div>
             <div class="image-div box" >
-                <p>Image Link</p>
-                 <input type="text" name="url" value="<%= place.image.url %>" class="form-control" required>
+                <p>Upload Image</p>
+                 <input type="file" name="url" class="form-control">
             </div>
             <div class="price-country-div">
                 <div class="price-div box">

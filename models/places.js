@@ -13,7 +13,6 @@ const placeSchema = new mongoose.Schema(
                 filename : String,
                 url : {
                     type: String,
-                    default : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIMq0Utl9O-TUtLMs4xn6n1q0jyqAYN0YB3w&s" 
                 }
             },
         price : {
@@ -32,6 +31,16 @@ const placeSchema = new mongoose.Schema(
         owner : {
             type : mongoose.Schema.Types.ObjectId,
             ref : "User"
+        },
+        geometry:{
+            type : {
+                type : String,
+                enum : ['Point'],
+            },
+            coordinates :{
+                type : [Number],
+                default : [-74.0060 , 40.7128],
+            }
         }
     }
 )
