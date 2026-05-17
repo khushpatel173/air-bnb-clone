@@ -30,8 +30,8 @@
 
 
     <div class="buttons">
-        <button id="edit-btn" onclick = "window.location.href = 'http://localhost:8080/listing/<%= place._id %>/edit'" class="hidden">Edit</button>
-        <form method="post" action="http://localhost:8080/listing/<%= place._id%>?_method=DELETE">
+        <button id="edit-btn" onclick = "window.location.href = '/listing/<%= place._id %>/edit'" class="hidden">Edit</button>
+        <form method="post" action="/listing/<%= place._id%>?_method=DELETE">
  <button id="delete-btn" class="hidden">Delete</button>
         </form>
     </div>

@@ -16,7 +16,7 @@
            <% let j = i; %> 
            <%  while(  i < properties.length && i < j + 3){ %> 
                 <div class="col">
-                    <img src="<%= properties[i].image.url%>" alt="Image" class="image" onclick="window.location.href = 'http://localhost:8080/listing/<%=properties[i]._id%>'">
+                    <img src="<%= properties[i].image.url%>" alt="Image" class="image" onclick="window.location.href = '/listing/<%=properties[i]._id%>'">
                     <div class="name"><%= properties[i].title%></div>
                      <div class="price">$<%= properties[i].price%>/night</div>
                 </div>

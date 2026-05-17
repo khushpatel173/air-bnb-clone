@@ -37,7 +37,7 @@ let url , filename;
     {
       headers: {
         'User-Agent': 'airbnb-sample-app/1.0 (khush9427528660@gmail.com)', // REQUIRED by Nominatim policy
-        'Referer': 'http://localhost:8080' // or your production domain
+        'Referer': 'https://air-bnb-clone-vouh.onrender.com' 
       },
       timeout: 5000
     }

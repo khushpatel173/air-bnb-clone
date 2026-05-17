@@ -6,7 +6,7 @@
 
     <div class="content">
         <h2>Edit your place</h2>
-        <form method="post" action="http://localhost:8080/listing/<%=place._id%>" id="myForm" novalidate class="needs-validation" enctype="multipart/form-data">
+        <form method="post" action="/listing/<%=place._id%>" id="myForm" novalidate class="needs-validation" enctype="multipart/form-data">
             <div class="title-div box">
                 <p>Title</p>
                 <input type="text" name="title" value="<%= place.title %>" class="form-control" required>
