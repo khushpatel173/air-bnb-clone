@@ -16,6 +16,7 @@ const cookieParser = require("cookie-parser");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const { saveRedirectUrl } = require("./authenticate_mdlware.js");
 
@@ -26,7 +27,7 @@ const User = require("./models/users.js");
 
 
 app.engine("ejs" , engine);
-
+const dbUrl = process.env.ATLAS_URL;
 app.use(methodOverride("_method"));
 main().then(()=>{
     console.log("connection successful");
@@ -34,7 +35,7 @@ main().then(()=>{
     console.log(err);
 })
 async function main(){
-   await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
+   await mongoose.connect(dbUrl);
 }
 let port = 8080;
 app.listen(port , ()=>{
@@ -44,14 +45,28 @@ app.set("views" , path.join(__dirname , "views"));
 app.set("view engine" , "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+const store = MongoStore.create(
+    {
+        mongoUrl : dbUrl,
+        touchAfter : 24 * 3600,
+      crypto: {
+    secret: process.env.SECRET_KEY,
+  },
+    }
+);
+store.on("error" , (err)=>{
+    console.log(" Error in mongo session store" , err);
+})
 const sessionOptions = {
-    secret : "secretcode",
+    store , 
+     secret: process.env.SECRET_KEY,
         resave : false,
         saveUninitialized : true,
         cookie : {
             expires : Date.now() + 7 * 24 * 60 * 60 * 1000, // in ms
             //   expires : Date.now(), // in ms
-            maxAge : 7 * 24 * 60 * 60 * 100,
+            maxAge : 7 * 24 * 60 * 60 * 1000,
           
             httpOnly : true, // the cookie become unaccesseble to the java script
         }

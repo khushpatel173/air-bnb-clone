@@ -1,12 +1,15 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 const Place = require("./models/places.js");
+
+const dbUrl = process.env.ATLAS_URL;
 main().then(()=>{
     console.log("connection successful");
 }).catch((err)=>{
     console.log(err);
 })
 async function main(){
-   await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
+   await mongoose.connect(dbUrl);
 }
 let sampleListings = [
   {
@@ -358,6 +361,6 @@ let sampleListings = [
     country: "Costa Rica",
   },
 ];
-const ownerId = new mongoose.Types.ObjectId('69e3c55eaa919d0201dd17bd');
+const ownerId = new mongoose.Types.ObjectId('6a09724d06484bf76c92457f');
 sampleListings = sampleListings.map((obj) =>({...obj, owner : ownerId}));
 Place.insertMany(sampleListings);
