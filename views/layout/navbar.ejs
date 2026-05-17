@@ -18,11 +18,11 @@
     <div class="all-listing text ">All Listings</div>
     <div class="add-place text ">Airbnb your Home </div>
     <%if(!currUser){%>
-<div class="text" id="login-div"  onclick="window.location.href = 'http://localhost:8080/login'">Login</div>
-    <div class="text" id="signup-div"  onclick=" window.location.href = 'http://localhost:8080/signup'">Signup</div>
+<div class="text" id="login-div"  onclick="window.location.href = '/login'">Login</div>
+    <div class="text" id="signup-div"  onclick=" window.location.href = '/signup'">Signup</div>
     <%}%>
     <% if(currUser){ %>
- <div class="text" id="logout-div" onclick=" window.location.href = 'http://localhost:8080/logout'">Logout</div>
+ <div class="text" id="logout-div" onclick=" window.location.href = '/logout'">Logout</div>
     <%}%>
  </div>
      <%- include("./flash.ejs") %>
@@ -38,14 +38,14 @@
     let logout_div = document.querySelector("#logout-div");
 
     home.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
+        window.location.href = "/listing";
     });
      all_list.addEventListener("click" , ()=>{
-        window.location.href = "http://localhost:8080/listing";
+        window.location.href = "/listing";
     });
      let addbtn = document.querySelector(".add-place");
     addbtn.addEventListener("click" , ()=>{
-        window.location.href = 'http://localhost:8080/listing/add';
+        window.location.href = '/listing/add';
     });
 </script>
 </body>
