@@ -6,3 +6,11 @@ form{
 h2{
     margin-top: 50px;
 }
+
+#google-login{
+    padding: 5px;
+    margin: 5px;
+    margin-left: 45%;
+    margin-top : 10px;
+    border: 2px solid black;
+}

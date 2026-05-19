@@ -9,9 +9,12 @@ const userSchema = new Schema(
             unique : true,
          }
          // username and password the pass local mongoose will automatically create it so no nede to mention it here by doing hashing and salting 
-   
-
-
+         ,
+         googleId: {
+      type: String,
+      unique: true,
+      sparse: true
+   }
     }
 )
 userSchema.plugin(passportLocalMongoose); // it will create username and pass on its own and some methods. it will add to the schema\

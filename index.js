@@ -15,6 +15,7 @@ const Review = require("./models/reviews.js");
 const cookieParser = require("cookie-parser");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
+const authRouter = require("./routes/auth.js");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
@@ -22,6 +23,7 @@ const { saveRedirectUrl } = require("./authenticate_mdlware.js");
 
 const passport = require("passport");
 const localStrategy = require("passport-local");
+var GoogleStrategy = require('passport-google-oidc');
 const User = require("./models/users.js");
 // to use passport we also need express-session
 
@@ -62,7 +64,7 @@ const sessionOptions = {
     store , 
      secret: process.env.SECRET_KEY,
         resave : false,
-        saveUninitialized : true,
+        saveUninitialized : false,
         cookie : {
             expires : Date.now() + 7 * 24 * 60 * 60 * 1000, // in ms
             //   expires : Date.now(), // in ms
@@ -80,11 +82,51 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new localStrategy(User.authenticate())); // mentioning what are we using like the local one or like oauth
+passport.use(new localStrategy(User.authenticate())); // mentioning what are we using like the local one or like oauth\
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback",
+    },
+    async (issuer, profile, done) => {
+      try {
+        const email = profile.emails?.[0]?.value || profile._json?.email;
+
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (!user && email) {
+          user = await User.findOne({ email });
+
+          if (user) {
+            user.googleId = profile.id;
+            await user.save();
+          }
+        }
+
+        if (!user) {
+          user = await User.create({
+            email,
+            username: profile.displayName,
+            googleId: profile.id,
+          });
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
 
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+
 
 
 // res.locals is like storing a data for that particular request
@@ -96,77 +138,10 @@ app.use((req , res , next)=>{
     res.locals.currUser = req.user;
     next();
 })
-
-// app.get("/registerDemo" ,async (req , res)=>{
-//     let fakeUser = new User({
-//         email : "khush@gmail.com" , 
-//         username : "delta_student" // we can write this it will auto add username here
-//     });
-
-//     let registeredUser = await User.register(fakeUser , "password"); // it will be saved in the db with this password
-//     res.send(registeredUser);
-// });
-
-
-app.get("/signup" , (req ,res)=>{
-    // render a form which will take users details
-    res.render("signup_form.ejs");
-})
-app.get("/login" ,(req , res)=>{
-    res.render("login.ejs");
-})
-app.get("/logout" , (req , res ,next )=>{
-    req.logout((err)=>{
-        if(err){
-            next(err);
-        }
-        req.flash("success" , "You are logged out");
-        res.redirect("/listing");
-    })
-});
-app.post("/login",saveRedirectUrl , passport.authenticate("local" , {failureRedirect : "/login" , failureFlash : true}) ,(req ,res)=>{
-    // if you are here that means you are logged in
-    let redirectUrl = res.locals.redirectUrl || "/listing";
-    delete req.session.redirectUrl;
-    req.flash("success" , "Welcome to airbnb , you are logged in");
-    res.redirect(redirectUrl);
-})
-app.post("/signup" , wrapAsync(async(req ,res)=>{
-    // get all the details
-    try{
-        let {username , email , password} = req.body;
-
-    
-    // make a new user with this and store in the database
-    let user = new User({
-        email,
-        username,
-    });
-   let registeredUser =  await User.register(user , password);
-    // let checkUser = await User.findOne({email : email});
-    // if(checkUser){
-    //     req.flash("failure" , "User with this email already exists");
-    //     res.redirect("/signup");
-    //     return;
-    // }
-       req.login(registeredUser , (err)=>{
-             if(err){
-                next(err);
-            }
-     req.flash("success" , "Welcome to airbnb , you are signedup");
-    res.redirect("/listing");
-        })
-
-}
-catch(e){
-    // error would be that user exists
-    req.flash("failure" , "User with this username already exists");
-        res.redirect("/signup");
-}
-}));
-
+app.use("/" , authRouter);
 app.use("/listing/:id/review" , reviewRouter);
 app.use("/listing" , listingRouter);
+
 
 // signed cookies - if you change the whole thing then it will be null if you change just the name then it will come but as false and in signed cookies noithing else the normal cookies will come
 // app.use(cookieParser("secretcode"));
