@@ -89,7 +89,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: 'https://air-bnb-clone-vouh.onrender.com/auth/google/callback',
     },
     async (issuer, profile, done) => {
       try {

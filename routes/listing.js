@@ -110,6 +110,18 @@ router
          url = result.secure_url;
           filename = result.original_filename;
   }
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${req.body.location}&format=geojson&limit=1`,
+    {
+      headers: {
+        'User-Agent': 'airbnb-sample-app/1.0 (khush9427528660@gmail.com)', // REQUIRED by Nominatim policy
+        'Referer': 'https://air-bnb-clone-vouh.onrender.com' 
+      },
+      timeout: 5000
+    }
+  );
+      
+        const data = await response.json();
     let {id} = req.params;
     let place = await Place.findById(id);
     if(!(res.locals.currUser && place.owner.equals(res.locals.currUser._id))){
@@ -124,8 +136,9 @@ router
     place.image = {
         url ,filename
     };
-    await place.save();
-}
+    }
+place.geometry = data.features[0].geometry;
+await place.save();
     res.redirect(`/listing/${id}`);
 }))
 .delete(isAuthenticated ,isOwner ,   wrapAsync(async (req ,res)=>{
