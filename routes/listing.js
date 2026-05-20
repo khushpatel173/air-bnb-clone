@@ -32,18 +32,35 @@ let url , filename;
 
     //   get the cordinates and store them in the database
 
-   const response = await fetch(
+  // const _loc = encodeURIComponent(req.body.location || '');
+  const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${req.body.location}&format=geojson&limit=1`,
     {
       headers: {
         'User-Agent': 'airbnb-sample-app/1.0 (khush9427528660@gmail.com)', // REQUIRED by Nominatim policy
-        'Referer': 'https://air-bnb-clone-vouh.onrender.com' 
+        'Referer': 'https://air-bnb-clone-vouh.onrender.com'
       },
       timeout: 5000
     }
   );
-      
-        const data = await response.json();
+
+  // const contentType = response.headers.get('content-type') || '';
+  // if (!response.ok) {
+  //   const body = await response.text();
+  //   console.error('Geocoder error (create):', response.status, contentType, body);
+  //   throw new ExpressError(502, 'Geocoding service error');
+  // }
+  // if (!contentType.includes('json')) {
+  //   const body = await response.text();
+  //   console.error('Geocoder returned non-JSON (create):', contentType, body);
+  //   throw new ExpressError(502, 'Invalid geocoder response');
+  // }
+  const data = await response.json();
+  if(data.features.length <= 0)
+  {
+    next(new ExpressError(404 , "No City is found"));
+    return;
+  }
         // data.geometry is the geojson format so just store it
 //    remove the file from the system
                 // let {title,description,price,country,location} =req.body;
@@ -110,18 +127,35 @@ router
          url = result.secure_url;
           filename = result.original_filename;
   }
+  // const _loc = encodeURIComponent(req.body.location || '');
   const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${req.body.location}&format=geojson&limit=1`,
     {
       headers: {
         'User-Agent': 'airbnb-sample-app/1.0 (khush9427528660@gmail.com)', // REQUIRED by Nominatim policy
-        'Referer': 'https://air-bnb-clone-vouh.onrender.com' 
+        'Referer': 'https://air-bnb-clone-vouh.onrender.com'
       },
       timeout: 5000
     }
   );
-      
-        const data = await response.json();
+
+  // const contentType = response.headers.get('content-type') || '';
+  // if (!response.ok) {
+  //   const body = await response.text();
+  //   console.error('Geocoder error (update):', response.status, contentType, body);
+  //   throw new ExpressError(502, 'Geocoding service error');
+  // }
+  // if (!contentType.includes('json')) {
+  //   const body = await response.text();
+  //   console.error('Geocoder returned non-JSON (update):', contentType, body);
+  //   throw new ExpressError(502, 'Invalid geocoder response');
+  // }
+  const data = await response.json();
+   if(data.features.length <= 0)
+  {
+    next(new ExpressError(404 , "No City is found"));
+    return;
+  }
     let {id} = req.params;
     let place = await Place.findById(id);
     if(!(res.locals.currUser && place.owner.equals(res.locals.currUser._id))){
